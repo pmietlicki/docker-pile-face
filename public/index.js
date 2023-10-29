@@ -6,27 +6,32 @@ let resetBtn = document.querySelector("#reset-button");
 let isFlipping = false;
 
 function flipCoin() {
-	if (isFlipping) return;
-	
-	isFlipping = true;
-	
-	let i = Math.floor(Math.random() * 2);
-	coin.style.animation = "none";
-	if (i) {
-		setTimeout(function () {
-			coin.style.animation = "spin-heads 3s forwards";
-		}, 100);
-		heads++;
-	}
-	else {
-		setTimeout(function () {
-			coin.style.animation = "spin-tails 3s forwards";
-		}, 100);
-		tails++;
-	}
-	setTimeout(updateStats, 3000);
-	setTimeout(() => { isFlipping = false; }, 3000);
-	disableButton();
+    if (isFlipping) return;
+    
+    isFlipping = true;
+    
+    let i = Math.floor(Math.random() * 2);
+    let rotation = i ? 1800 : 1980;  // 1800 pour la face, 1980 pour la pile
+    let startRotation = gsap.getProperty(coin, "rotationX");
+    let endRotation = startRotation + rotation;
+
+    gsap.to(coin, {
+        rotationX: endRotation,
+        duration: 3,
+        onComplete: () => {
+            isFlipping = false;
+            // Vérifiez la rotation finale pour mettre à jour les compteurs
+            let finalRotation = gsap.getProperty(coin, "rotationX");
+            if ((finalRotation + 180) % 360 < 180) {
+                heads++;
+            } else {
+                tails++;
+            }
+            updateStats();  // Mettez à jour les statistiques à la fin de l'animation
+        }
+    });
+
+    disableButton();
 }
 
 flipBtn.addEventListener("click", flipCoin);
