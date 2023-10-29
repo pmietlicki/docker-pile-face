@@ -10,7 +10,15 @@ function flipCoin() {
     
     isFlipping = true;
     
-    let i = Math.floor(Math.random() * 2);
+    let i;
+    try {
+        let array = new Uint32Array(1);
+        window.crypto.getRandomValues(array);
+        i = array[0] % 2;  // i sera soit 0 soit 1 avec une distribution uniforme
+    } catch (error) {
+        console.error("crypto API non disponible, utilisant Math.random à la place:", error);
+        i = Math.floor(Math.random() * 2);
+    }
     let rotation = i ? 1800 : 1980;  // 1800 pour la face, 1980 pour la pile
     let startRotation = gsap.getProperty(coin, "rotationX");
     let endRotation = startRotation + rotation;
