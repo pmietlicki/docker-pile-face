@@ -4,9 +4,6 @@ FROM nginx:alpine
 # Copiez tous les fichiers et répertoires du répertoire courant dans le répertoire de contenu statique de Nginx
 COPY . /usr/share/nginx/html/
 
-# Supprimez le Dockerfile du répertoire de contenu statique
-RUN rm /usr/share/nginx/html/Dockerfile
-
 # Exposez le port 80 pour le trafic HTTP
 EXPOSE 80
 
